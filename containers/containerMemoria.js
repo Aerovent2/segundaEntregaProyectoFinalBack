@@ -1,49 +1,91 @@
 class Contenedor {
     constructor() {
-      this.elementos = [];
+      this.productos = [];
     }
-  
-    getById(id) {
-      const elem = this.elementos.find((elem) => elem.id == id);
-      if (!elem) {
-        throw new Error(`Error al listar: elemento no encontrado`);
-      } else {
-        return elem;
+    save(objeto){
+      try{
+          if(this.productos){
+                   if(this.productos.length > 0){
+                      let maxId = this.productos[0].id
+                      for(let i =0; i< this.productos.length; i++){
+                          if(maxId < this.productos[i].id){
+                              maxId=this.productos[i].id
+                          }
+                      objeto.id = maxId+1
+                      }
+                   }else{
+                    objeto.id=1
+                   }
+          }else{
+              objeto.id=1
+          }
+          objeto.timestamp = new Date()
+          this.productos.push(objeto)
+          return objeto.id
+      }catch(err){
+          console.error(`hubo un error al guardar el archivo : ${err}`)
       }
-    }
-  
-    getAll() {
-      return [...this.elementos];
-    }
-  
-    save(newElem) {
-      this.elementos.push(newElem);
-      return newElem;
-    }
-  
-    updateById(elem) {
-      elem.id = Number(elem.id);
-      const index = this.elementos.findIndex((p) => p.id == elem.id);
-      if (index == -1) {
-        throw new Error(`Error al actualizar: elemento no encontrado`);
-      } else {
-        this.elementos[index] = elem;
-        return elem;
-      }
-    }
-  
-    deleteById(id) {
-      const index = this.elementos.findIndex((elem) => elem.id == id);
-      if (index == -1) {
-        throw new Error(`Error al borrar: elemento no encontrado`);
-      } else {
-        return this.elementos.splice(index, 1);
-      }
-    }
-  
-    deleteAll() {
-      this.elementos = [];
-    }
+  }
+   getById(numero){
+      try{
+          if (this.productos){
+              let encontrado =  this.productos.find(objeto => objeto.id === parseInt(numero) )
+              if(encontrado){
+                  return encontrado
+              }else{
+                  return null
+              } 
+          }
+      }catch(err){
+          console.log(`hubo un error al buscar por id : ${err}`)
+      } 
+  }
+
+   updateById(id,producto){
+      try{
+          if (this.productos){
+              let encontrado =  this.productos.findIndex(objeto => objeto.id === parseInt(id) )
+              if(encontrado != -1){
+                  producto.id = parseInt(id)
+                  this.productos[encontrado]=producto
+              return producto
+              }else{
+                  return null
+              } 
+          }
+      }catch(err){
+          console.log(`hubo un error al actualizar por id : ${err}`)
+      } 
+  }
+
+
+  deleteById(id){
+      try{
+          if (this.productos){
+              let filtrado =  this.productos.filter(objeto => objeto.id !== parseInt(id) )
+              this.productos= filtrado
+              return filtrado
+              
+          }
+      }catch(err){
+          console.log(`hubo un error al actualizar por id : ${err}`)
+      } 
+  }
+
+  async getAll(){
+      try{
+          return this.productos
+      }catch(err){
+          console.log(`hubo un error al buscar todos : ${err}`)
+      } 
+  }
+  deleteAll(){
+      try{
+        this.productos=[]
+      }catch(err){
+          console.log(`hubo un error al borrar todos : ${err}`)
+      } 
+  } 
   }
   
   export default Contenedor;

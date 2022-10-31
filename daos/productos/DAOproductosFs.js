@@ -1,6 +1,6 @@
-import baseDeDatos from "../../db/dbProductos.js"
+import Contenedor from "../../containers/containerFs.js"
 
-class DAOproductosFs extends baseDeDatos{
+class DAOproductosFs extends Contenedor{
     constructor(){
         super('productos.json')
     }

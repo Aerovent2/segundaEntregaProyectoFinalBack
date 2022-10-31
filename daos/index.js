@@ -11,7 +11,12 @@ mongo: async ()=>{
     }
 },
 mem:async ()=>{
-    return
+    const {default :DAOcarritosMem} = await import('./carritos/DAOcarritosMem.js')
+    const {default :DAOproductosMem} = await import('./productos/DAOproductosMem.js')
+    return {
+        DAOcarritos: new DAOcarritosMem,
+        DAOproductos: new DAOproductosMem
+}
 },
 firebase: async()=>{
     const {default :DAOcarritosFirebase} = await import('./carritos/DAOcarritosFirebase.js')

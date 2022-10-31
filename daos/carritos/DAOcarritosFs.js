@@ -1,17 +1,28 @@
-import baseDeDatos from "../../db/dbCarrito.js"
+import Contenedor from '../../containers/containerFs.js'
 import fs from 'fs'
-class DAOcarritosFs extends baseDeDatos{
+
+class DAOcarritosFs extends Contenedor{
     constructor(){
         super('carritos.json')
     }
-
+    async existe(){
+        let buscarArchivos= await fs.promises.readdir(this.ruta)
+        let existe= buscarArchivos.find(archivo => archivo=== this.nombreDeArchivo)
+        return existe
+    }
+    async leer(){
+        let leer = await fs.promises.readFile(`${this.ruta}/${this.nombreDeArchivo}`, 'utf-8')
+        let parsed =  JSON.parse(leer)
+        return parsed
+    }
     async  save(){//
         let carritos = []
         let carrito={}
         try{
             
             if(this.existe()){
-                let existente = await fs.promises.readFile(`./db/${this.nombreDeArchivo}`, 'utf-8')
+                
+                let existente = await fs.promises.readFile(`${this.ruta}/${this.nombreDeArchivo}`, 'utf-8')
                 if(existente !== ''){
                      carritos = JSON.parse(existente)
                      if(carritos.length > 0){
@@ -22,6 +33,8 @@ class DAOcarritosFs extends baseDeDatos{
                             }
                         carrito.id = maxId+1
                         }
+                     }else{
+                        carrito.id=1
                      }
                 }
             }else{
@@ -30,7 +43,7 @@ class DAOcarritosFs extends baseDeDatos{
             carrito.productos=[]
             carrito.timestamp = new Date()
             carritos.push(carrito)
-            await fs.promises.writeFile(`./db/${this.nombreDeArchivo}`, JSON.stringify(carritos))
+            await fs.promises.writeFile(`${this.ruta}/${this.nombreDeArchivo}`, JSON.stringify(carritos))
             return carrito.id
         }catch(err){
             console.error(`hubo un error al guardar el archivo : ${err}`)
@@ -46,7 +59,7 @@ class DAOcarritosFs extends baseDeDatos{
                         return {error: 'id de producto no encontrado'}
                     }
                     desdeFs[encontrado].productos.push(producto)
-                    await fs.promises.writeFile(`./db/${this.nombreDeArchivo}`, JSON.stringify(desdeFs))
+                    await fs.promises.writeFile(`${this.ruta}/${this.nombreDeArchivo}`, JSON.stringify(desdeFs))
                     return desdeFs[encontrado]
                 }else{
                     return {error: "Carrito no encontrado"}
@@ -66,7 +79,7 @@ class DAOcarritosFs extends baseDeDatos{
                 if(encontrado != -1){
                     let filtrado= desdeFs[encontrado].productos.filter(objeto => objeto.id !== parseInt(id_prod) )
                     desdeFs[encontrado].productos= filtrado
-                    await fs.promises.writeFile(`./db/${this.nombreDeArchivo}`, JSON.stringify(desdeFs))
+                    await fs.promises.writeFile(`${this.ruta}/${this.nombreDeArchivo}`, JSON.stringify(desdeFs))
                     return desdeFs[encontrado] 
                 }else{
                     return {error: "Carrito no encontrado"}
