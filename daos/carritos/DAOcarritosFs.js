@@ -1,19 +1,10 @@
+import baseDeDatos from "../../db/dbCarrito.js"
 import fs from 'fs'
+class DAOcarritosFs extends baseDeDatos{
+    constructor(){
+        super('carritos.json')
+    }
 
-class baseDeDatos {
-    constructor(nombreDeArchivo){
-        this.nombreDeArchivo=nombreDeArchivo
-    }
-    async existe(){
-        let buscarArchivos= await fs.promises.readdir('./db')
-        let existe= buscarArchivos.find(archivo => archivo=== this.nombreDeArchivo)
-        return existe
-    }
-    async leer(){
-        let leer = await fs.promises.readFile(`./db/${this.nombreDeArchivo}`, 'utf-8')
-        let parsed =  JSON.parse(leer)
-        return parsed
-    }
     async  save(){//
         let carritos = []
         let carrito={}
@@ -45,23 +36,6 @@ class baseDeDatos {
             console.error(`hubo un error al guardar el archivo : ${err}`)
         }
     }
-    async getById(numero){//
-        try{
-            if (this.existe()){
-                let desdeFs = await this.leer()
-                let encontrado =  desdeFs.find(objeto => objeto.id === parseInt(numero) )
-                if(encontrado){
-                    return encontrado
-                }else{
-                    return null
-                } 
-            }
-        }catch(err){
-            console.log(`hubo un error al buscar por id : ${err}`)
-        } 
-    }
-
-
     async updateCarritoById(idCarrito,producto){//
         try{
             if (this.existe()){
@@ -82,7 +56,8 @@ class baseDeDatos {
             console.log(`hubo un error al actualizar por id : ${err}`)
         } 
     }
-
+        
+    
     async deleteProductoById(idCarrito,id_prod){//
         try{
             if (this.existe()){
@@ -101,21 +76,8 @@ class baseDeDatos {
             console.log(`hubo un error al borrar producto por id : ${err}`)
         } 
     }
-    async deleteById(id){//
-        try{
-            if (this.existe()){
-                let desdeFs = await this.leer()
-                let filtrado =  desdeFs.filter(objeto => objeto.id !== parseInt(id) )
-                await fs.promises.writeFile(`./db/${this.nombreDeArchivo}`, JSON.stringify(filtrado))
-                return {"idCarritoEliminado":id}
-            }
-        }catch(err){
-            console.log(`hubo un error al borrar por id : ${err}`)
-        } 
-    }
 }
 
+export default DAOcarritosFs
 
 
-
-export default baseDeDatos

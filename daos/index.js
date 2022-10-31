@@ -22,7 +22,12 @@ firebase: async()=>{
 }
 },
 fs:async ()=>{
-    return
+    const {default :DAOcarritosFs} = await import('./carritos/DAOcarritosFs.js')
+    const {default :DAOproductosFs} = await import('./productos/DAOproductosFs.js')
+    return {
+        DAOcarritos: new DAOcarritosFs,
+        DAOproductos: new DAOproductosFs
+}
 }
 
 }

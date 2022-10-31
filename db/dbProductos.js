@@ -1,5 +1,4 @@
-const fs = require('fs')
-
+import fs from 'fs'
 
 class baseDeDatos {
     constructor(nombreDeArchivo){
@@ -132,4 +131,4 @@ class baseDeDatos {
 
 
 
-module.exports = baseDeDatos
+export default baseDeDatos
