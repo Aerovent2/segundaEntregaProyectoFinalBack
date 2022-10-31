@@ -1,8 +1,10 @@
 import express  from 'express'
+import daos from '../daos/index.js'
+
 const {Router}= express
 const routerProductos=Router()
-import DAOproductosMongo from '../daos/productos/DAOproductos.js'
-const DB = new DAOproductosMongo
+
+const DB = daos.DAOproductos
 const admin = true
 
 const isAdmin = (req,res,next)=>{

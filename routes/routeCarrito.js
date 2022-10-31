@@ -1,12 +1,12 @@
 import express from 'express'
 const {Router}= express
 const routerCarrito=Router()
-import DAOcarritosMongo from '../daos/carritos/DAOcarritoMongo.js'
-import {DB} from './routeProductos.js'
-
-const dbCarrito= new DAOcarritosMongo
 
 
+import daos from '../daos/index.js'
+
+const dbCarrito= daos.DAOcarritos
+const DB = daos.DAOproductos
 
 
 
